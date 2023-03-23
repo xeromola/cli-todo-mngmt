@@ -1,5 +1,4 @@
-import click
-import time
+import rich_click as click
 from tasks import TasksService
 
 
@@ -11,27 +10,21 @@ def task_group():
 @click.command()
 def ls():
     """Command to list all the tasks you have"""
-    start_time = time.time()
     TasksService.list_all_tasks()
-    print(time.time() - start_time)
 
 
 @click.command()
 @click.argument("task", type=str)
 def add(task: str):
     """Command to add a task"""
-    start_time = time.time()
     TasksService.add_task(task)
-    print(time.time() - start_time)
 
 
 @click.command()
 @click.argument("task_id", type=int)
 def rem(task_id: int):
     """Command to remove a task based on the ID"""
-    start_time = time.time()
     TasksService.remove_task(task_id=task_id)
-    print(time.time() - start_time)
 
 
 task_group.add_command(ls)

@@ -1,6 +1,7 @@
 from database import SqlAlchemyService
 from model import Task
-from sqlalchemy.sql import text
+from rich.console import Console
+from rich.table import Table
 
 
 alchemy = SqlAlchemyService()
@@ -12,14 +13,25 @@ class TasksService:
     """
 
     @staticmethod
+    def list_tasks_as_table(tasks: list):
+        table = Table(title="Tasks")
+
+        # Header Column
+        table.add_column("ID", justify="right", style="cyan")
+        table.add_column("Task", justify="right", style="green")
+
+        # Other rows
+        for task in tasks:
+            table.add_row(str(task.id), task.task)
+
+        console = Console()
+        console.print(table)
+
+    @staticmethod
     def list_all_tasks():
-        # session = alchemy.get_session()
-        # tasks = session.query(Task).all()
-        engine = alchemy.engine
-        conn = engine.connect()
-        stmt = text("SELECT * FROM TASKS")
-        tasks = conn.execute(stmt)
-        print(tasks)
+        session = alchemy.get_session()
+        tasks = session.query(Task).all()
+        TasksService.list_tasks_as_table(tasks)
 
     @staticmethod
     def add_task(task: str):
