@@ -1,5 +1,11 @@
-import rich_click as click
+import time
+import click
 from tasks import TasksService
+from rich.console import Console
+from exceptions import NoTaskForGivenId
+
+
+console = Console()
 
 
 @click.group
@@ -24,7 +30,12 @@ def add(task: str):
 @click.argument("task_id", type=int)
 def rem(task_id: int):
     """Command to remove a task based on the ID"""
-    TasksService.remove_task(task_id=task_id)
+    try:
+        TasksService.remove_task(task_id=task_id)
+    except NoTaskForGivenId:
+        console.print(
+            "No task found for given id. Please enter the Id correctly", style="red"
+        )
 
 
 task_group.add_command(ls)

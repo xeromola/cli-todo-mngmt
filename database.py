@@ -13,10 +13,6 @@ class SqlAlchemyService:
         # Creating a engine for sqlaclhemy
         self.engine = create_engine(
             "sqlite:///tasks.db",
-            # echo=True,
-            # poolclass=QueuePool,
-            # pool_size=10,
-            # max_overflow=20,
         )
 
     def get_session(self) -> Session:

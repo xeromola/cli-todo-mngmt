@@ -1,7 +1,9 @@
-from database import SqlAlchemyService
 from model import Task
-from rich.console import Console
 from rich.table import Table
+from rich.console import Console
+from database import SqlAlchemyService
+from exceptions import NoTaskForGivenId
+from sqlalchemy.orm.exc import NoResultFound
 
 
 alchemy = SqlAlchemyService()
@@ -42,8 +44,11 @@ class TasksService:
 
     @staticmethod
     def remove_task(task_id: int):
-        session = alchemy.get_session()
-        task = session.query(Task).filter_by(id=task_id).one()
-        session.delete(task)
-        session.commit()
-        session.close()
+        try:
+            session = alchemy.get_session()
+            task = session.query(Task).filter_by(id=task_id).one()
+            session.delete(task)
+            session.commit()
+            session.close()
+        except NoResultFound:
+            raise NoTaskForGivenId
